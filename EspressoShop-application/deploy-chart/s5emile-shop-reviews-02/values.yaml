@@ -1,0 +1,98 @@
+replicaCount: 2
+
+image:
+  repository: devopseasylearning/s5-emile-shop-reviews
+  pullPolicy: Always
+  tag: "v1.2.0"
+
+# containerPullSecrets: 
+#   name: s5emile-registrykey
+#   type: kubernetes.io/dockerconfigjson
+
+imagePullSecrets: 
+  - name: s5emile-registrykey
+
+metadata:
+   reviews02:
+      name: release-name-s5emile-shop-reviews-v2
+
+# nameOverride: ""
+# fullnameOverride: ""
+
+labels2:
+   version: v2
+   app2: s5emile-shop-reviews-02
+
+selectors12:
+   version2: v2
+
+configmapData2:
+    SERVICE_VERSION: v2
+    POSTGRES_USER: postgres
+    POSTGRES_HOST: postgresql-ha-postgresql
+    POSTGRES_DB: s5emile
+  
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# podAnnotations: {}
+# podLabels: {}
+
+# podSecurityContext: {}
+#   # fsGroup: 2000
+
+# securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8092
+  containerPort: 80
+  targetPort: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

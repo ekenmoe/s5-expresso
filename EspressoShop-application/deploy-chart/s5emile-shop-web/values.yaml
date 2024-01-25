@@ -1,0 +1,93 @@
+replicaCount: 2
+
+image:
+  repository: devopseasylearning/s5-emile-shop-web
+  pullPolicy: Always
+  tag: "v1.2.0"
+
+containerPullSecrets: 
+  name: s5emile-registrykey
+  type: kubernetes.io/dockerconfigjson
+
+imagePullSecrets: 
+  - name: s5emile-registrykey
+
+# nameOverride: ""
+# fullnameOverride: ""
+
+labels:
+   version: v1
+   app: s5emile-shop-web
+
+configmapData:
+    ProductCatalogUrl: http://espresso-shop-product-catalog-svc:8091
+    ReviewsUrl: http://espresso-shop-reviews-svc:8092
+    ProductCatalogPort: 8091
+    ReviewsPort: 8092
+    webPort: 8090
+
+secrets:
+    redis: redis-secret
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+#podAnnotations: {}
+
+#podSecurityContext: {}
+  # fsGroup: 2000
+
+#securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: NodePort
+  port: 8090
+  containerPort: 80
+  targetPort: 80
+  webname: espresso-shop-product-catalog-svc
+  reviewname: espresso-shop-reviews-svc
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

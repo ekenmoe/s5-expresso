@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.metadata.reviews02.name }}
+  #namespace: s5emile
+data:
+   {{- toYaml .Values.configmapData2 | nindent 4 }}
+  
+
+
+
+
